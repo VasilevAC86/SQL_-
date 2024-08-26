@@ -1,0 +1,30 @@
+/*insert into Orders (ProductId, CustomerId, CreateAt, ProductCount, Price) 
+values ( (SELECT ID FROM products WHERE ProductName='IPhone8'), 
+        (SELECT ID FROM CUSTOMERS WHERE FIRSTNAME='Sam'),
+        '26.08.2024', 1, 
+        (SELECT PRICE FROM PRODUCTS WHERE PRODUCTNAME='IPhone8'))*/
+
+/*select * from Products 
+where price > (select avg(Price) from Products)*/
+
+/*select id, (select ProductName from Products where id=ProductId) as ProductName,
+(select Company from Products where id=ProductId) as ProductCompany,
+(select FirstName from Customers where id=CustomerId) as Customer,
+CreatedAt, ProductCount, Price,
+(select ProductCount from Products where id=ProductId) - 
+(select sum(ProductCount) from Orders as o where o.ProductId=orders.ProductId) as Остатки,
+(select productCount from products where id=productId) Было
+from Orders*/
+
+/*select * 
+from Orders o
+join Customers c on c.Id=o.CustomerId*/
+
+select p.ProductName, p.Company, c.FirstName, o.CreatedAt, o.Price, o.ProductCount,
+p.ProductCount-o1.pc
+from Orders o
+join Customers c on c.Id=o.CustomerId
+join Products p on p.Id=o.ProductId
+join (select o2.productId, sum(o2.productCount) pc 
+    from Orders o2 group by o2.ProductId) as o1
+    on o1.ProductId=o.ProductId
